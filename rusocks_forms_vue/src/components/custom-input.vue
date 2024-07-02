@@ -8,13 +8,14 @@
       ]"
     >
       <input
+        :id="placeholder_value"
         v-model="value"
         :type="type || 'text'"
         :class="{ 'input-error': showError }"
         @focus="focused = true"
         @blur="focused = false"
       />
-      <label for="regFormEmail" class="">{{ placeholder_value }}</label>
+      <label :for="placeholder_value" class="">{{ placeholder_value }}</label>
     </div>
     <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
   </div>
@@ -71,6 +72,7 @@ watch(value, (newValue) => {
   outline: none;
 }
 .twpx-catalog-auth__form-control label {
+  cursor: text;
   position: absolute;
   top: 0;
   left: 0;
