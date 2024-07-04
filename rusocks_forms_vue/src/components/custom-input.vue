@@ -1,24 +1,22 @@
 <template>
-  <div>
-    <div
-      :class="[
-        'twpx-catalog-auth__form-control',
-        { 'twpx-catalog-auth__form-control--active': value || focused },
-        { 'twpx-catalog-auth__form-control--error': showError }
-      ]"
-    >
-      <input
-        :id="placeholder_value"
-        v-model="value"
-        :type="type || 'text'"
-        :class="{ 'input-error': showError }"
-        @focus="focused = true"
-        @blur="focused = false"
-      />
-      <label :for="placeholder_value" class="">{{ placeholder_value }}</label>
-    </div>
-    <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
+  <div
+    :class="[
+      'twpx-catalog-auth__form-control',
+      { 'twpx-catalog-auth__form-control--active': value || focused },
+      { 'twpx-catalog-auth__form-control--error': showError }
+    ]"
+  >
+    <input
+      :id="placeholder_value"
+      v-model="value"
+      :type="type || 'text'"
+      :class="{ 'input-error': showError }"
+      @focus="focused = true"
+      @blur="focused = false"
+    />
+    <label :for="placeholder_value" class="">{{ placeholder_value }}</label>
   </div>
+  <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
 </template>
 
 <script setup>
@@ -34,7 +32,6 @@ const props = defineProps({
 const { value, errorMessage } = useField(props.name)
 const focused = ref(false)
 
-// Вычисляемое свойство для проверки состояния ошибки
 const showError = computed(() => errorMessage.value && !focused.value)
 
 // Слежение за изменениями в поле ввода, чтобы обновлять состояние при вводе текста
@@ -54,6 +51,7 @@ watch(value, (newValue) => {
   position: relative;
 }
 .twpx-catalog-auth__form-control input {
+  box-sizing: border-box;
   font-size: 14px;
   display: block;
   width: 100%;
