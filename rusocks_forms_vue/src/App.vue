@@ -93,8 +93,8 @@ const onSubmit = handleSubmit((values) => {
 <style scoped>
 .form-сontainer {
   margin: 0 auto;
-  padding: 40px 0;
-  max-width: 880px;
+  padding: 40px 12px;
+  max-width: 904px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -148,8 +148,7 @@ const onSubmit = handleSubmit((values) => {
 }
 @media (max-width: 768px) {
   .form-сontainer {
-    margin: 0 12px;
-    padding: 22px 0;
+    padding: 22px 12px;
   }
   .form-wrapper {
     margin: 0 30px;
