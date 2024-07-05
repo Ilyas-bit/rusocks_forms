@@ -27,6 +27,7 @@ const { value, errorMessage, validate } = useField(props.name)
 <style scoped>
 .license-agreement-auth__container {
   margin-top: 3px;
+  margin-bottom: 16px;
   display: flex;
   align-items: start;
 }
@@ -38,10 +39,10 @@ const { value, errorMessage, validate } = useField(props.name)
   display: inline-block;
   width: 24px;
   height: 24px;
-  min-width: 24px; /* добавлено для предотвращения сжатия */
+  min-width: 24px;
   background: #ffffff;
   border: 2px solid #ff0000;
-  margin-right: 10px; /* отступ между чекбоксом и текстом */
+  margin-right: 15px; /* отступ между чекбоксом и текстом */
   transition:
     background-color 0.2s ease-in,
     border-color 0.2s ease-in;
@@ -85,5 +86,11 @@ const { value, errorMessage, validate } = useField(props.name)
 .license-agreement-auth__form-control--error {
   transition: color 0.2s ease-in;
   color: rgb(255, 0, 0);
+}
+
+@media (max-width: 768px) {
+  .license-agreement-auth__container {
+    margin-top: 0px;
+  }
 }
 </style>

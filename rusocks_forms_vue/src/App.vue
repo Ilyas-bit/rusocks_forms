@@ -2,7 +2,7 @@
   <div class="form-сontainer">
     <h2 class="form-сontainer__header">Зарегистристрироваться</h2>
     <CustomErrorMassage
-      class="error-message"
+      class="form-сontainer__error-message"
       textError="Пользователь с таким Email уже существует."
     />
 
@@ -25,7 +25,7 @@
           placeholder_value="Подтверждение пароля"
         />
         <CustomChekbox name="acceptTerms" />
-        <button class="twpx-catalog-auth__form_button">Отправить</button>
+        <button class="twpx-catalog-auth__form_button">Зарегистрироваться</button>
       </form>
     </div>
   </div>
@@ -92,21 +92,21 @@ const onSubmit = handleSubmit((values) => {
 <style scoped>
 .form-сontainer {
   margin: 0 auto;
-  width: 880px;
+  max-width: 880px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 .form-сontainer__header {
+  margin-bottom: 16px;
   font-style: normal;
   font-variant: normal;
   font-weight: normal;
   font-size: 30px;
   line-height: 37px;
-  font-family: 'Montserrat', sans-serif;
 }
 .form-wrapper {
-  width: 408px;
+  max-width: 408px;
 }
 .form-wrapper__text {
   font-family: Montserrat;
@@ -122,23 +122,42 @@ const onSubmit = handleSubmit((values) => {
   font-weight: normal;
   font-size: 12px;
   line-height: 15px;
-  margin-top: -8px;
   margin-bottom: 16px;
 }
 .twpx-catalog-auth__form_button {
   border-radius: 3px;
-  height: 48px;
+  height: 60px;
   padding: 0;
-  border: none;
-  font: inherit;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 18px;
   color: #fff;
   width: 100%;
   background-color: #000;
 }
-
-@media (min-width: 768px) {
-  .error-message {
-    margin-bottom: 96px;
+.form-сontainer__error-message {
+  margin-bottom: 96px;
+}
+@media (max-width: 768px) {
+  .form-сontainer {
+    margin: 0 12px;
+  }
+  .form-wrapper {
+    margin: 0 30px;
+  }
+  .form-сontainer__header {
+    font-family: Montserrat;
+    font-weight: 400; /* normal */
+    font-style: normal; /* normal */
+    font-size: 30px;
+    line-height: 37px;
+  }
+  .form-сontainer__header {
+    margin-bottom: 37px;
+  }
+  .form-сontainer__error-message {
+    margin-bottom: 53px;
   }
 }
 </style>

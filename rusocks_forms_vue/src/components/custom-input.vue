@@ -70,6 +70,7 @@ watch(value, (newValue) => {
   outline: none;
 }
 .twpx-catalog-auth__form-control label {
+  user-select: none;
   cursor: text;
   position: absolute;
   top: 0;
@@ -102,5 +103,8 @@ watch(value, (newValue) => {
 .error-message {
   color: red;
   font-size: 12px;
+}
+
+@media (max-width: 768px) {
 }
 </style>
