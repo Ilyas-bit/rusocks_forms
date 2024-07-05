@@ -1,5 +1,6 @@
 <template>
   <div class="form-сontainer">
+    <h2 class="form-сontainer__header">Зарегистристрироваться</h2>
     <CustomErrorMassage
       class="error-message"
       textError="Пользователь с таким Email уже существует."
@@ -95,6 +96,14 @@ const onSubmit = handleSubmit((values) => {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.form-сontainer__header {
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-size: 30px;
+  line-height: 37px;
+  font-family: 'Montserrat', sans-serif;
 }
 .form-wrapper {
   width: 408px;
