@@ -26,6 +26,7 @@
         />
         <CustomChekbox name="acceptTerms" />
         <button class="twpx-catalog-auth__form_button">Зарегистрироваться</button>
+        <div class="form-wrapper__login-link">Уже зарегистрированы?<br />Тогда жмите Войти.</div>
       </form>
     </div>
   </div>
@@ -92,6 +93,7 @@ const onSubmit = handleSubmit((values) => {
 <style scoped>
 .form-сontainer {
   margin: 0 auto;
+  padding: 40px 0;
   max-width: 880px;
   display: flex;
   flex-direction: column;
@@ -125,6 +127,7 @@ const onSubmit = handleSubmit((values) => {
   margin-bottom: 16px;
 }
 .twpx-catalog-auth__form_button {
+  margin-bottom: 32px;
   border-radius: 3px;
   height: 60px;
   padding: 0;
@@ -139,9 +142,14 @@ const onSubmit = handleSubmit((values) => {
 .form-сontainer__error-message {
   margin-bottom: 96px;
 }
+.form-wrapper__login-link {
+  font: normal normal normal 16px/19px;
+  text-align: center;
+}
 @media (max-width: 768px) {
   .form-сontainer {
     margin: 0 12px;
+    padding: 22px 0;
   }
   .form-wrapper {
     margin: 0 30px;
@@ -158,6 +166,9 @@ const onSubmit = handleSubmit((values) => {
   }
   .form-сontainer__error-message {
     margin-bottom: 53px;
+  }
+  .twpx-catalog-auth__form_button {
+    margin-bottom: 16px;
   }
 }
 </style>
