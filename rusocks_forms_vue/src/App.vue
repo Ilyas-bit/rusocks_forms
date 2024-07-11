@@ -12,7 +12,7 @@
         поля формы обязательные.
       </div>
       <form novalidate @submit="onSubmit">
-        <CustomInput name="name" placeholder_value="ФИО" />
+        <CustomInput name="fullName" placeholder_value="ФИО" />
         <CustomInput name="email" type="email" placeholder_value="Email" />
         <CustomInput name="companyName" placeholder_value="Название компании" />
         <CustomInput name="password" type="password" placeholder_value="Пароль" />
@@ -52,7 +52,7 @@ yup.setLocale({
 })
 
 const schema = yup.object({
-  name: yup.string().required('Введите ваше имя'),
+  fullName: yup.string().required('Введите ваше имя'),
   companyName: yup.string().required('Введите вашу фамилию'),
   email: yup
     .string()
@@ -71,7 +71,6 @@ const schema = yup.object({
 })
 
 const initialValuesFromJson = {
-  name: '',
   email: '',
   companyName: '',
   password: '',
@@ -81,12 +80,13 @@ const initialValuesFromJson = {
 
 const { handleSubmit, errors, setValues } = useForm({
   validationSchema: schema,
-  initialValues: initialValuesFromJson // Используем начальные значения из JSON
+  initialValues: initialValuesFromJson
 })
 
 const onSubmit = handleSubmit((values) => {
-  alert(JSON.stringify(values, null, 2))
-  // Дополнительные действия по отправке формы, если необходимо
+  const [surname, name, patronymic] = values.fullName.split(' ')
+  const formData = { ...values, surname, name, patronymic }
+  alert(JSON.stringify(formData, null, 2))
 })
 </script>
 
