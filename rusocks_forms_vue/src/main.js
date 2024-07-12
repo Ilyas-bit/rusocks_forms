@@ -17,37 +17,50 @@ window.appealNewChangeFormStore = {
       {
         name: 'fullName',
         placeholder_value: 'ФИО',
+        initialValue: 'ddd',
         type: 'text',
-        validationSchema: 'yup.string().required()'
+        required: true
+      },
+      {
+        name: 'telephone',
+        placeholder_value: 'Телефон',
+        initialValue: 'ddd',
+        type: 'tel',
+        required: true
       },
       {
         name: 'email',
         placeholder_value: 'Email',
+        initialValue: 'аааа',
         type: 'email',
-        validationSchema: 'yup.string().required().email()'
+        required: true
       },
       {
         name: 'companyName',
         placeholder_value: 'Название компании',
+        initialValue: '',
         type: 'text',
-        validationSchema: 'yup.string().required()'
+        required: true
       },
       {
         name: 'password',
         placeholder_value: 'Пароль',
+        initialValue: '',
         type: 'password',
-        validationSchema: 'yup.string().required().min(6)'
+        required: true
       },
       {
         name: 'passwordConfirm',
         placeholder_value: 'Подтверждение пароля',
+        initialValue: 'ааа',
         type: 'password',
-        validationSchema: 'yup.string().required().min(6).oneOf([yup.ref("password")])'
+        required: true
       },
       {
         name: 'acceptTerms',
         type: 'checkbox',
-        validationSchema: 'yup.boolean().oneOf([true])'
+        initialValue: false,
+        required: true
       }
     ],
     submitButton: {

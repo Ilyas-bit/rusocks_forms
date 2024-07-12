@@ -1,16 +1,32 @@
 <template>
   <label class="license-agreement-auth__container">
-    <input class="license-agreement-auth__checkbox" type="checkbox" v-model="value" />
-    <span class="license-agreement-auth__fake-checkbox"></span>
+    <input
+      class="license-agreement-auth__checkbox"
+      :class="[
+        'license-agreement-auth__checkbox-input',
+        { 'license-agreement-auth__checkbox-input--error': errorMessage }
+      ]"
+      type="checkbox"
+      v-model="isChecked"
+      :checked="isChecked"
+      @change="validateCheckbox"
+    />
+    <span
+      :class="[
+        'license-agreement-auth__fake-checkbox',
+        { 'license-agreement-auth__fake-checkbox--error': errorMessage }
+      ]"
+    ></span>
     <p
       :class="[
         'license-agreement-auth__text',
-        { 'license-agreement-auth__form-control--error': errorMessage }
+        { 'license-agreement-auth__text--error': errorMessage }
       ]"
     >
       Продолжая использовать наш сайт, вы даете согласие на обработку файлов cookies и других
-      пользовательских данных, в соответствии с политика обработки персональных данных.
+      пользовательских данных, в соответствии с политикой обработки персональных данных.
     </p>
+    <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
   </label>
 </template>
 
@@ -18,10 +34,19 @@
 import { useField } from 'vee-validate'
 
 const props = defineProps({
-  name: String
+  name: String,
+  required: Boolean
 })
 
 const { value, errorMessage, validate } = useField(props.name)
+
+const isChecked = value
+
+const validateCheckbox = () => {
+  if (props.required) {
+    validate(isChecked)
+  }
+}
 </script>
 
 <style scoped>
@@ -31,9 +56,11 @@ const { value, errorMessage, validate } = useField(props.name)
   display: flex;
   align-items: start;
 }
+
 .license-agreement-auth__checkbox {
   display: none;
 }
+
 .license-agreement-auth__fake-checkbox {
   position: relative;
   display: inline-block;
@@ -41,12 +68,17 @@ const { value, errorMessage, validate } = useField(props.name)
   height: 24px;
   min-width: 24px;
   background: #ffffff;
-  border: 2px solid #ff0000;
-  margin-right: 15px; /* отступ между чекбоксом и текстом */
+  border: 2px solid #000000;
+  margin-right: 15px;
   transition:
-    background-color 0.2s ease-in,
-    border-color 0.2s ease-in;
+    background-color 0.1s ease,
+    border-color 0.1s ease;
 }
+
+.license-agreement-auth__fake-checkbox--error {
+  border-color: #ff0000;
+}
+
 .license-agreement-auth__fake-checkbox::before {
   content: '';
   background-color: transparent;
@@ -56,7 +88,7 @@ const { value, errorMessage, validate } = useField(props.name)
   left: 50%;
   top: 50%;
   margin-top: 1px;
-  transition: transform 0.2s ease-in;
+  transition: transform 0.1s ease;
 }
 
 .license-agreement-auth__fake-checkbox::after {
@@ -70,8 +102,9 @@ const { value, errorMessage, validate } = useField(props.name)
   position: absolute;
   left: 0px;
   top: 0px;
-  transition: transform 0.2s ease-in;
+  transition: transform 0.1s ease;
 }
+
 .license-agreement-auth__checkbox:checked + .license-agreement-auth__fake-checkbox {
   border-color: #000000;
   background-color: #000000;
@@ -81,11 +114,11 @@ const { value, errorMessage, validate } = useField(props.name)
   display: inline-block;
   margin-top: 0px;
   user-select: none;
-  transition: color 0.2s ease-in;
+  transition: color 0.1s ease;
 }
-.license-agreement-auth__form-control--error {
-  transition: color 0.2s ease-in;
-  color: rgb(255, 0, 0);
+
+.license-agreement-auth__text--error {
+  color: #ff0000;
 }
 
 @media (max-width: 768px) {

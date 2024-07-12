@@ -1,7 +1,7 @@
 <template>
   <div class="form-container">
     <h2 class="form-container__header">Зарегистристрироваться</h2>
-    <CustomErrorMassage
+    <CustomErrorMessage
       class="form-container__error-message"
       textError="Пользователь с таким Email уже существует."
     />
@@ -10,7 +10,7 @@
         Цены и заказ доступны только зарегистрированным и авторизованным оптовым покупателям. Все
         поля формы обязательные.
       </div>
-      <form novalidate @submit="onSubmit">
+      <form novalidate @submit.prevent="onSubmit">
         <template v-for="(field, index) in formSettings.fields" :key="index">
           <CustomInput
             v-if="field.type !== 'checkbox'"
@@ -18,8 +18,16 @@
             :type="field.type"
             :placeholder_value="field.placeholder_value"
             :required="field.required"
+            v-model="values[field.name]"
+            :error="errors[field.name]"
           />
-          <CustomChekbox v-else :name="field.name" :required="field.required" />
+          <CustomCheckbox
+            v-else
+            :name="field.name"
+            :required="field.required"
+            v-model="values[field.name]"
+            :error="errors[field.name]"
+          />
         </template>
         <button :class="formSettings.submitButton.className">
           {{ formSettings.submitButton.text }}
@@ -34,34 +42,58 @@
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import CustomInput from './components/custom-input.vue'
-import CustomErrorMassage from './components/custom-error-message.vue'
-import CustomChekbox from './components/custom-checkbox.vue'
+import CustomErrorMessage from './components/custom-error-message.vue'
+import CustomCheckbox from './components/custom-checkbox.vue'
 
 const formSettings = window.appealNewChangeFormStore.formSettings
 
 let schemaObject = {}
-
-formSettings.fields.forEach(function (item) {
-  const strValidationSchema = item.validationSchema
-  const yupOobject = eval(`${strValidationSchema}`)
-  schemaObject[item.name] = yupOobject
+formSettings.fields.forEach((field) => {
+  let schemaBuilder = yup.string()
+  if (field.required) {
+    schemaBuilder = schemaBuilder.required('Это поле обязательно для заполнения')
+  }
+  switch (field.type) {
+    case 'email':
+      schemaBuilder = schemaBuilder.email('Введите корректный email')
+      break
+    case 'password':
+      schemaBuilder = schemaBuilder.min(6, 'Пароль должен содержать минимум 6 символов')
+      break
+    case 'checkbox':
+      schemaBuilder = yup.boolean().oneOf([true], 'Вы должны согласиться с условиями')
+      break
+    case 'tel':
+      schemaBuilder = schemaBuilder.matches(/^[\d\s()+-]+$/, 'Введите корректный номер телефона')
+      break
+    default:
+      break
+  }
+  schemaObject[field.name] = schemaBuilder
 })
 
 const schema = yup.object().shape(schemaObject)
 
-const initialValuesFromJson = {
-  acceptTerms: true
-}
+let conditionObject = {}
+formSettings.fields.forEach((field) => {
+  conditionObject[field.name] = field.initialValue
+})
 
-const { handleSubmit, errors, setValues } = useForm({
+const { handleSubmit, errors, values } = useForm({
   validationSchema: schema,
-  initialValues: initialValuesFromJson
+  initialValues: conditionObject
 })
 
 const onSubmit = handleSubmit((values) => {
-  const [surname, name, patronymic] = values.fullName.split(' ')
-  const formData = { ...values, surname, name, patronymic }
-  alert(JSON.stringify(formData, null, 2))
+  // Пример обработки значений формы
+  const { fullName } = values
+  if (fullName) {
+    const [surname, name, patronymic] = fullName.split(' ')
+    const formData = { ...values, surname, name, patronymic }
+    alert(JSON.stringify(formData, null, 2))
+  } else {
+    alert('Не указано полное имя')
+  }
 })
 </script>
 
