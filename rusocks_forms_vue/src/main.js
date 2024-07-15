@@ -14,42 +14,42 @@ const defaultFormStore = {
       {
         name: 'fullName',
         placeholder_value: 'ФИО',
-        initialValue: 'ff',
+        initialValue: 'Иван Иванов Иванович',
         type: 'text',
         required: true
       },
       {
         name: 'telephone',
         placeholder_value: 'Телефон',
-        initialValue: '',
+        initialValue: '89432742638',
         type: 'tel',
         required: true
       },
       {
         name: 'email',
         placeholder_value: 'Email',
-        initialValue: '',
+        initialValue: 'asdfghjk@gmail.com',
         type: 'email',
         required: true
       },
       {
         name: 'companyName',
         placeholder_value: 'Название компании',
-        initialValue: '',
+        initialValue: 'Рога и копыта',
         type: 'text',
         required: true
       },
       {
         name: 'password',
         placeholder_value: 'Пароль',
-        initialValue: '',
+        initialValue: '123456789',
         type: 'password',
         required: true
       },
       {
         name: 'passwordConfirm',
         placeholder_value: 'Подтверждение пароля',
-        initialValue: '',
+        initialValue: '123456789',
         type: 'password',
         required: true
       },
