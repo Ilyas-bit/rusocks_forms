@@ -10,9 +10,6 @@ const app = createApp(App)
 
 window.appealNewChangeFormStore = {
   formSettings: {
-    formName: 'AppealForm',
-    action: '/submit',
-    method: 'POST',
     fields: [
       {
         name: 'fullName',
@@ -64,8 +61,7 @@ window.appealNewChangeFormStore = {
       }
     ],
     submitButton: {
-      text: 'Зарегистрироваться',
-      className: 'twpx-catalog-auth__form_button'
+      text: 'Зарегистрироваться'
     }
   }
 }
