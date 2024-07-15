@@ -1,5 +1,5 @@
 <template>
-  <div v-if="formSettings" class="form-container">
+  <div class="form-container">
     <h2 class="form-container__header">Зарегистристрироваться</h2>
     <CustomErrorMessage
       class="form-container__error-message"
@@ -29,7 +29,7 @@
             :error="errors[field.name]"
           />
         </template>
-        <button class="twpx-catalog-auth__form_button" type="submit">
+        <button class="twpx-catalog-auth__form_button">
           {{ formSettings.submitButton.text }}
         </button>
         <div class="form-wrapper__login-link">
@@ -41,76 +41,60 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue' // Используем Vue 3 синтаксис
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import CustomInput from './components/custom-input.vue'
 import CustomErrorMessage from './components/custom-error-message.vue'
 import CustomCheckbox from './components/custom-checkbox.vue'
 
-const formSettings = ref(null)
-const errors = ref({})
-const values = ref({})
+const formSettings = window.appealNewChangeFormStore.formSettings
 
-onMounted(() => {
-  if (window.appealNewChangeFormStore && window.appealNewChangeFormStore.formSettings) {
-    formSettings.value = window.appealNewChangeFormStore.formSettings
+let schemaObject = {}
+formSettings.fields.forEach((field) => {
+  let schemaBuilder = yup.string()
+  if (field.required) {
+    schemaBuilder = schemaBuilder.required('Это поле обязательно для заполнения')
+  }
+  switch (field.type) {
+    case 'email':
+      schemaBuilder = schemaBuilder.email('Введите корректный email')
+      break
+    case 'password':
+      schemaBuilder = schemaBuilder.min(6, 'Пароль должен содержать минимум 6 символов')
+      break
+    case 'checkbox':
+      schemaBuilder = yup.boolean().oneOf([true], 'Вы должны согласиться с условиями')
+      break
+    case 'tel':
+      schemaBuilder = schemaBuilder.matches(/^[\d\s()+-]+$/, 'Введите корректный номер телефона')
+      break
+    default:
+      break
+  }
+  schemaObject[field.name] = schemaBuilder
+})
 
-    // Создание схемы валидации
-    let schemaObject = {}
-    formSettings.value.fields.forEach((field) => {
-      let schemaBuilder = yup.string()
-      if (field.required) {
-        schemaBuilder = schemaBuilder.required('Это поле обязательно для заполнения')
-      }
-      switch (field.type) {
-        case 'email':
-          schemaBuilder = schemaBuilder.email('Введите корректный email')
-          break
-        case 'password':
-          schemaBuilder = schemaBuilder.min(6, 'Пароль должен содержать минимум 6 символов')
-          break
-        case 'checkbox':
-          schemaBuilder = yup.boolean().oneOf([true], 'Вы должны согласиться с условиями')
-          break
-        case 'tel':
-          schemaBuilder = schemaBuilder.matches(
-            /^[\d\s()+-]+$/,
-            'Введите корректный номер телефона'
-          )
-          break
-        default:
-          break
-      }
-      schemaObject[field.name] = schemaBuilder
-    })
+const schema = yup.object().shape(schemaObject)
 
-    const schema = yup.object().shape(schemaObject)
+let conditionObject = {}
+formSettings.fields.forEach((field) => {
+  conditionObject[field.name] = field.initialValue
+})
 
-    // Начальные значения формы
-    let initialValues = {}
-    formSettings.value.fields.forEach((field) => {
-      initialValues[field.name] = field.initialValue
-    })
+const { handleSubmit, errors, values } = useForm({
+  validationSchema: schema,
+  initialValues: conditionObject
+})
 
-    const { handleSubmit, resetForm, validate } = useForm({
-      validationSchema: schema,
-      initialValues: initialValues
-    })
-
-    const onSubmit = handleSubmit((values) => {
-      // Обработка данных формы
-      const { fullName } = values
-      if (fullName) {
-        const [surname, name, patronymic] = fullName.split(' ')
-        const formData = { ...values, surname, name, patronymic }
-        alert(JSON.stringify(formData, null, 2))
-      }
-      resetForm()
-    })
-
-    values.value = validate()
-    errors.value = ref(validate().errors)
+const onSubmit = handleSubmit((values) => {
+  // Пример обработки значений формы
+  const { fullName } = values
+  if (fullName) {
+    const [surname, name, patronymic] = fullName.split(' ')
+    const formData = { ...values, surname, name, patronymic }
+    alert(JSON.stringify(formData, null, 2))
+  } else {
+    alert('Не указано полное имя')
   }
 })
 </script>
@@ -153,7 +137,6 @@ onMounted(() => {
 }
 .twpx-catalog-auth__form_button {
   text-align: center;
-  margin-top: 0;
   margin-bottom: 32px;
   border-radius: 3px;
   height: 60px;

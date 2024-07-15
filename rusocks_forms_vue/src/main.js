@@ -8,27 +8,27 @@ import router from './router'
 
 const app = createApp(App)
 
-window.appealNewChangeFormStore = {
+const defaultFormStore = {
   formSettings: {
     fields: [
       {
         name: 'fullName',
         placeholder_value: 'ФИО',
-        initialValue: 'ddd',
+        initialValue: 'ff',
         type: 'text',
         required: true
       },
       {
         name: 'telephone',
         placeholder_value: 'Телефон',
-        initialValue: 'ddd',
+        initialValue: '',
         type: 'tel',
         required: true
       },
       {
         name: 'email',
         placeholder_value: 'Email',
-        initialValue: 'аааа',
+        initialValue: '',
         type: 'email',
         required: true
       },
@@ -49,7 +49,7 @@ window.appealNewChangeFormStore = {
       {
         name: 'passwordConfirm',
         placeholder_value: 'Подтверждение пароля',
-        initialValue: 'ааа',
+        initialValue: '',
         type: 'password',
         required: true
       },
@@ -64,6 +64,10 @@ window.appealNewChangeFormStore = {
       text: 'Зарегистрироваться'
     }
   }
+}
+
+if (!window.appealNewChangeFormStore) {
+  window.appealNewChangeFormStore = defaultFormStore
 }
 
 app.use(createPinia())
