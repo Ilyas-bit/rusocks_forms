@@ -24,6 +24,7 @@
           <CustomCheckbox
             v-else
             :name="field.name"
+            :agreementText="field.agreementText"
             :required="field.required"
             v-model="values[field.name]"
             :error="errors[field.name]"

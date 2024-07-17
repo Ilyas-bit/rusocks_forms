@@ -58,6 +58,8 @@ const defaultFormStore = {
         name: 'acceptTerms',
         type: 'checkbox',
         initialValue: false,
+        agreementText:
+          'Продолжая использовать наш сайт, вы даете согласие на обработку файлов cookies и других пользовательских данных, в соответствии с политика обработки персональных данных.',
         required: true
       }
     ],

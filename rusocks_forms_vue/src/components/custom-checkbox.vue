@@ -23,23 +23,24 @@
         { 'license-agreement-auth__text--error': errorMessage }
       ]"
     >
-      {{ name }}
+      {{ agreementText }}
     </p>
-    <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
   </label>
 </template>
 
 <script setup>
 import { useField } from 'vee-validate'
+import { defineProps } from 'vue'
 
 const props = defineProps({
   name: String,
+  agreementText: String,
   required: Boolean
 })
 
 const { value, errorMessage, validate } = useField(props.name)
 
-const isChecked = value
+let isChecked = value
 
 const validateCheckbox = () => {
   if (props.required) {
@@ -119,6 +120,11 @@ const validateCheckbox = () => {
 
 .license-agreement-auth__text--error {
   color: #ff0000;
+}
+
+.error-message {
+  color: #ff0000;
+  font-size: 12px;
 }
 
 @media (max-width: 768px) {
