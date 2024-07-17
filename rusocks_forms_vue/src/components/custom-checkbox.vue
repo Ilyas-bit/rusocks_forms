@@ -23,8 +23,7 @@
         { 'license-agreement-auth__text--error': errorMessage }
       ]"
     >
-      Продолжая использовать наш сайт, вы даете согласие на обработку файлов cookies и других
-      пользовательских данных, в соответствии с политикой обработки персональных данных.
+      {{ name }}
     </p>
     <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
   </label>
@@ -51,6 +50,7 @@ const validateCheckbox = () => {
 
 <style scoped>
 .license-agreement-auth__container {
+  text-align: start;
   margin-top: 3px;
   margin-bottom: 16px;
   display: flex;

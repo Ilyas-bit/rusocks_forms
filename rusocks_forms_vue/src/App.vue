@@ -74,25 +74,27 @@ formSettings.fields.forEach((field) => {
 
 const schema = yup.object().shape(schemaObject)
 
-let conditionObject = {}
+let initialValues = {}
 formSettings.fields.forEach((field) => {
-  conditionObject[field.name] = field.initialValue
+  initialValues[field.name] = field.initialValue
 })
 
 const { handleSubmit, resetForm, errors, values } = useForm({
   validationSchema: schema,
-  initialValues: conditionObject
+  initialValues: initialValues
 })
 
 const arrayError = ref([])
 
 const onSubmit = handleSubmit(async (values) => {
-  const requestData = {}
-  for (let key in values) {
-    requestData[key] = values[key]
+  let formData = { ...values }
+
+  if (formData.fullName) {
+    const parts = formData.fullName.split(' ')
+    formData.surname = parts[0] || ''
+    formData.name = parts[1] || ''
+    formData.patronymic = parts[2] || ''
   }
-  console.log(requestData)
-  let responseData
 
   try {
     const response = await fetch(formSettings.submitUrl, {
@@ -100,32 +102,25 @@ const onSubmit = handleSubmit(async (values) => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestData)
+      body: JSON.stringify(formData)
     })
 
-    // Проверяем, что ответ не пустой
     if (!response.ok) {
       throw new Error('Ошибка HTTP: ' + response.status)
     }
 
-    // Разбираем JSON только если есть данные
-    responseData = await response.json()
+    const responseData = await response.json()
 
     if (responseData && responseData.errors) {
       arrayError.value = responseData.errors
       throw new Error('Ошибка сервера: ' + responseData.message)
     }
 
-    console.log('Форма успешно отправлена')
-    alert('Форма успешно отправлена!')
     arrayError.value = []
     resetForm()
   } catch (error) {
-    if (!responseData || !responseData.errors) {
-      arrayError.value = ['Ошибка при отправке формы']
-    }
     console.error('Ошибка при отправке формы:', error)
-    alert('Ошибка при отправке формы')
+    arrayError.value = ['Ошибка при отправке формы']
   }
 })
 </script>
