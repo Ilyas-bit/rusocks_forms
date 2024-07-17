@@ -9,6 +9,7 @@ import router from './router'
 const app = createApp(App)
 
 const defaultFormStore = {
+  submitUrl: 'https://example.com/submit-form',
   formSettings: {
     fields: [
       {

@@ -5,9 +5,42 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+    <link rel="stylesheet" href="./src/assets/form.css" />
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <div class="form-container">
+      <h2 class="form-container__header">Зарегистристрироваться</h2>
+      <div style="width: 100%" id="app"></div>
+      <div class="form-wrapper">
+        <div class="form-wrapper__login-link">
+          Уже зарегистрированы?<br />Тогда жмите <a href="http://www.yandex.ru">Войти.</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function loadScript() {
+        const script = document.createElement('script')
+        script.type = 'module'
+        script.src = '/src/main.js'
+        document.body.appendChild(script)
+      }
+
+      function checkAppealNewChangeFormStore() {
+        if (window.appealNewChangeFormStore) {
+          loadScript()
+          return true
+        }
+        return false
+      }
+
+      if (!checkAppealNewChangeFormStore()) {
+        const intervalId = setInterval(() => {
+          if (checkAppealNewChangeFormStore()) {
+            clearInterval(intervalId)
+          }
+        }, 1000)
+      }
+    </script>
   </body>
 </html>

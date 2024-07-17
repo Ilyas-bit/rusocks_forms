@@ -1,11 +1,11 @@
 <template>
-  <div class="form-container">
-    <h2 class="form-container__header">Зарегистристрироваться</h2>
+  <div class="form-container-app">
     <CustomErrorMessage
+      v-if="arrayError.length"
       class="form-container__error-message"
-      textError="Пользователь с таким Email уже существует."
+      :arrayError="arrayError"
     />
-    <div class="form-wrapper">
+    <div class="form-wrapper-app">
       <div class="form-wrapper__text">
         Цены и заказ доступны только зарегистрированным и авторизованным оптовым покупателям. Все
         поля формы обязательные.
@@ -32,15 +32,13 @@
         <button class="twpx-catalog-auth__form_button">
           {{ formSettings.submitButton.text }}
         </button>
-        <div class="form-wrapper__login-link">
-          Уже зарегистрированы?<br />Тогда жмите <a href="http://www.yandex.ru">Войти.</a>
-        </div>
       </form>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useForm } from 'vee-validate'
 import * as yup from 'yup'
 import CustomInput from './components/custom-input.vue'
@@ -81,28 +79,60 @@ formSettings.fields.forEach((field) => {
   conditionObject[field.name] = field.initialValue
 })
 
-const { handleSubmit, errors, values } = useForm({
+const { handleSubmit, resetForm, errors, values } = useForm({
   validationSchema: schema,
   initialValues: conditionObject
 })
 
-const onSubmit = handleSubmit((values) => {
-  // Пример обработки значений формы
-  const { fullName } = values
-  if (fullName) {
-    const [surname, name, patronymic] = fullName.split(' ')
-    const formData = { ...values, surname, name, patronymic }
-    alert(JSON.stringify(formData, null, 2))
-  } else {
-    alert('Не указано полное имя')
+const arrayError = ref([])
+
+const onSubmit = handleSubmit(async (values) => {
+  const requestData = {}
+  for (let key in values) {
+    requestData[key] = values[key]
+  }
+  console.log(requestData)
+  let responseData
+
+  try {
+    const response = await fetch(formSettings.submitUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestData)
+    })
+
+    // Проверяем, что ответ не пустой
+    if (!response.ok) {
+      throw new Error('Ошибка HTTP: ' + response.status)
+    }
+
+    // Разбираем JSON только если есть данные
+    responseData = await response.json()
+
+    if (responseData && responseData.errors) {
+      arrayError.value = responseData.errors
+      throw new Error('Ошибка сервера: ' + responseData.message)
+    }
+
+    console.log('Форма успешно отправлена')
+    alert('Форма успешно отправлена!')
+    arrayError.value = []
+    resetForm()
+  } catch (error) {
+    if (!responseData || !responseData.errors) {
+      arrayError.value = ['Ошибка при отправке формы']
+    }
+    console.error('Ошибка при отправке формы:', error)
+    alert('Ошибка при отправке формы')
   }
 })
 </script>
 
 <style scoped>
-.form-container {
+.form-container-app {
   margin: 0 auto;
-  padding: 40px 12px;
   max-width: 904px;
   display: flex;
   flex-direction: column;
@@ -116,7 +146,7 @@ const onSubmit = handleSubmit((values) => {
   font-size: 30px;
   line-height: 37px;
 }
-.form-wrapper {
+.form-wrapper-app {
   max-width: 408px;
 }
 .form-wrapper__text {
@@ -165,8 +195,8 @@ const onSubmit = handleSubmit((values) => {
   }
   .form-container__header {
     font-family: Montserrat;
-    font-weight: 400; /* normal */
-    font-style: normal; /* normal */
+    font-weight: 400;
+    font-style: normal;
     font-size: 30px;
     line-height: 37px;
   }
