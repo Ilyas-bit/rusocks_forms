@@ -6,74 +6,33 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+// Функция для инициализации Vue приложения
+function initializeApp() {
+  const app = createApp(App)
 
-const defaultFormStore = {
-  submitUrl: 'https://example.com/submit-form',
-  formSettings: {
-    fields: [
-      {
-        name: 'fullName',
-        placeholder_value: 'ФИО',
-        initialValue: 'Иван Иванов Иванович',
-        type: 'text',
-        required: true
-      },
-      {
-        name: 'telephone',
-        placeholder_value: 'Телефон',
-        initialValue: '89432742638',
-        type: 'tel',
-        required: true
-      },
-      {
-        name: 'email',
-        placeholder_value: 'Email',
-        initialValue: 'asdfghjk@gmail.com',
-        type: 'email',
-        required: true
-      },
-      {
-        name: 'companyName',
-        placeholder_value: 'Название компании',
-        initialValue: 'Рога и копыта',
-        type: 'text',
-        required: true
-      },
-      {
-        name: 'password',
-        placeholder_value: 'Пароль',
-        initialValue: '123456789',
-        type: 'password',
-        required: true
-      },
-      {
-        name: 'passwordConfirm',
-        placeholder_value: 'Подтверждение пароля',
-        initialValue: '123456789',
-        type: 'password',
-        required: true
-      },
-      {
-        name: 'acceptTerms',
-        type: 'checkbox',
-        initialValue: false,
-        agreementText:
-          'Продолжая использовать наш сайт, вы даете согласие на обработку файлов cookies и других пользовательских данных, в соответствии с политика обработки персональных данных.',
-        required: true
-      }
-    ],
-    submitButton: {
-      text: 'Зарегистрироваться'
+  console.log('dddddddd')
+
+  app.use(createPinia())
+  app.use(router)
+
+  app.mount('#app')
+}
+
+function checkAppealNewChangeFormStore() {
+  return new Promise((resolve) => {
+    if (window.appealNewChangeFormStore) {
+      resolve(true)
+    } else {
+      const intervalId = setInterval(() => {
+        if (window.appealNewChangeFormStore) {
+          clearInterval(intervalId)
+          resolve(true)
+        }
+      }, 1000)
     }
-  }
+  })
 }
 
-if (!window.appealNewChangeFormStore) {
-  window.appealNewChangeFormStore = defaultFormStore
-}
-
-app.use(createPinia())
-app.use(router)
-
-app.mount('#app')
+checkAppealNewChangeFormStore().then(() => {
+  initializeApp()
+})
