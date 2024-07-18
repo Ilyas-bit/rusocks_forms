@@ -14,14 +14,14 @@
       @focus="focused = true"
       @blur="focused = false"
     />
-    <label :for="placeholder_value" class="">{{ placeholder_value }}</label>
+    <label :for="placeholder_value">{{ placeholder_value }}</label>
   </div>
   <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
 </template>
 
 <script setup>
 import { useField } from 'vee-validate'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 
 const props = defineProps({
   name: String,
@@ -40,6 +40,13 @@ watch(value, (newValue) => {
     focused.value = true
   } else {
     focused.value = false
+  }
+})
+
+// Проверка значения при монтировании компонента
+onMounted(() => {
+  if (value.value) {
+    focused.value = true
   }
 })
 </script>
