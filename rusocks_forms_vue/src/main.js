@@ -10,8 +10,6 @@ import router from './router'
 function initializeApp() {
   const app = createApp(App)
 
-  console.log('dddddddd')
-
   app.use(createPinia())
   app.use(router)
 

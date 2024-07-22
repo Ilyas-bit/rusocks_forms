@@ -6,34 +6,41 @@
       :arrayError="arrayError"
     />
     <div class="form-wrapper-app">
-      <div class="form-wrapper__text">
-        Цены и заказ доступны только зарегистрированным и авторизованным оптовым покупателям. Все
-        поля формы обязательные.
+      <div class="form-wrapper-app_shell">
+        <div
+          v-if="
+            formSettings &&
+            (formSettings.heading?.text || formSettings.text || formSettings.heading)
+          "
+          class="form-wrapper__text"
+        >
+          {{ formSettings.heading.text }}
+        </div>
+        <form novalidate @submit.prevent="onSubmit">
+          <template v-for="(field, index) in formSettings.fields" :key="index">
+            <CustomInput
+              v-if="field.type !== 'checkbox'"
+              :name="field.name"
+              :type="field.type"
+              :placeholder_value="field.placeholder_value"
+              :required="field.required"
+              v-model="values[field.name]"
+              :error="errors[field.name]"
+            />
+            <CustomCheckbox
+              v-else
+              :name="field.name"
+              :agreementText="field.agreementText"
+              :required="field.required"
+              v-model="values[field.name]"
+              :error="errors[field.name]"
+            />
+          </template>
+          <button class="twpx-catalog-auth__form_button">
+            {{ formSettings.submitButton.text }}
+          </button>
+        </form>
       </div>
-      <form novalidate @submit.prevent="onSubmit">
-        <template v-for="(field, index) in formSettings.fields" :key="index">
-          <CustomInput
-            v-if="field.type !== 'checkbox'"
-            :name="field.name"
-            :type="field.type"
-            :placeholder_value="field.placeholder_value"
-            :required="field.required"
-            v-model="values[field.name]"
-            :error="errors[field.name]"
-          />
-          <CustomCheckbox
-            v-else
-            :name="field.name"
-            :agreementText="field.agreementText"
-            :required="field.required"
-            v-model="values[field.name]"
-            :error="errors[field.name]"
-          />
-        </template>
-        <button class="twpx-catalog-auth__form_button">
-          {{ formSettings.submitButton.text }}
-        </button>
-      </form>
     </div>
   </div>
 </template>
@@ -143,10 +150,15 @@ const onSubmit = handleSubmit(async (values) => {
   line-height: 37px;
 }
 .form-wrapper-app {
+  background: #fcfcfc 0% 0% no-repeat padding-box;
+  width: 100%;
+}
+.form-wrapper-app_shell {
+  margin: 0 auto;
+  padding: 64px 30px 32px;
   max-width: 408px;
 }
 .form-wrapper__text {
-  font-family: Montserrat;
   margin-bottom: 16px;
   font-style: normal;
   font-weight: normal;
@@ -154,7 +166,6 @@ const onSubmit = handleSubmit(async (values) => {
   line-height: 19px;
 }
 .form-wrapper__text-password {
-  font-family: Montserrat;
   font-style: normal;
   font-weight: normal;
   font-size: 12px;
@@ -163,7 +174,6 @@ const onSubmit = handleSubmit(async (values) => {
 }
 .twpx-catalog-auth__form_button {
   text-align: center;
-  margin-bottom: 32px;
   border-radius: 3px;
   height: 60px;
   padding: 0;
@@ -176,7 +186,7 @@ const onSubmit = handleSubmit(async (values) => {
   background-color: #000;
 }
 .form-container__error-message {
-  margin-bottom: 96px;
+  margin-bottom: 32px;
 }
 .form-wrapper__login-link {
   font: normal normal normal 16px/19px;
@@ -190,7 +200,6 @@ const onSubmit = handleSubmit(async (values) => {
     margin: 0 30px;
   }
   .form-container__header {
-    font-family: Montserrat;
     font-weight: 400;
     font-style: normal;
     font-size: 30px;
@@ -200,10 +209,12 @@ const onSubmit = handleSubmit(async (values) => {
     margin-bottom: 37px;
   }
   .form-container__error-message {
-    margin-bottom: 53px;
+    margin-bottom: 23px;
   }
-  .twpx-catalog-auth__form_button {
-    margin-bottom: 16px;
+  .form-wrapper-app_shell {
+    margin: 0 auto;
+    padding: 30px 30px 16px;
+    max-width: 408px;
   }
 }
 </style>

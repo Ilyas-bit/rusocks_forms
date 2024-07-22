@@ -20,6 +20,7 @@ const props = defineProps({
 
 <style scoped>
 .custom-error-massage {
+  box-sizing: border-box;
   width: 100%;
   color: #fff;
   background-color: #ff0d0d;
