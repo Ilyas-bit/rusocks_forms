@@ -104,13 +104,15 @@ const onSubmit = handleSubmit(async (values) => {
     formData.patronymic = parts[2] || ''
   }
 
+  const form = new FormData()
+  Object.entries(formData).forEach(([key, value]) => {
+    form.append(key, value)
+  })
+
   try {
     const response = await fetch(formSettings.submitUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
+      body: form
     })
 
     if (!response.ok) {
@@ -128,7 +130,13 @@ const onSubmit = handleSubmit(async (values) => {
     resetForm()
   } catch (error) {
     console.error('Ошибка при отправке формы:', error)
-    arrayError.value = ['Ошибка при отправке формы']
+    arrayError.value = [
+      {
+        message: 'Ошибка при отправке формы: ' + error.message,
+        code: 0,
+        customData: null
+      }
+    ]
   }
 })
 </script>
