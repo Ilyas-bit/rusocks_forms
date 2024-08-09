@@ -1,10 +1,9 @@
 <template>
   <div class="form-container-app">
-    <CustomErrorMessage
-      v-if="arrayError.length"
-      class="form-container__error-message"
-      :arrayError="arrayError"
-    />
+    <div class="form-container__error-message">
+      <CustomErrorMessage v-if="objectError.length" :objectError="objectError" />
+    </div>
+
     <div class="form-wrapper-app">
       <div class="form-wrapper-app_shell">
         <div
@@ -58,9 +57,11 @@ const formSettings = window.appealNewChangeFormStore.formSettings
 let schemaObject = {}
 formSettings.fields.forEach((field) => {
   let schemaBuilder = yup.string()
+
   if (field.required) {
     schemaBuilder = schemaBuilder.required('Это поле обязательно для заполнения')
   }
+
   switch (field.type) {
     case 'email':
       schemaBuilder = schemaBuilder.email('Введите корректный email')
@@ -77,6 +78,16 @@ formSettings.fields.forEach((field) => {
     default:
       break
   }
+
+  // Добавляем проверку для поля подтверждения пароля
+  if (field.name === 'passwordConfirm') {
+    schemaBuilder = yup
+      .string()
+      .min(6, 'Пароль должен содержать минимум 6 символов')
+      .oneOf([yup.ref('password'), null], 'Пароли должны совпадать')
+      .required('Это поле обязательно для заполнения')
+  }
+
   schemaObject[field.name] = schemaBuilder
 })
 
@@ -92,7 +103,7 @@ const { handleSubmit, resetForm, errors, values } = useForm({
   initialValues: initialValues
 })
 
-const arrayError = ref([])
+const objectError = ref([])
 
 const onSubmit = handleSubmit(async (values) => {
   let formData = { ...values }
@@ -122,17 +133,26 @@ const onSubmit = handleSubmit(async (values) => {
     const responseData = await response.json()
 
     if (responseData && responseData.errors) {
-      arrayError.value = responseData.errors
-      throw new Error('Ошибка сервера: ' + responseData.message)
+      objectError.value = responseData.errors
+      console.log(a.value)
+    } else {
+      objectError.value = []
+      resetForm()
     }
-
-    arrayError.value = []
-    resetForm()
+    // Если регистрация прошла успешно, перенаправляем на указанный URL
+    if (
+      responseData &&
+      responseData.status === 'success' &&
+      responseData.data &&
+      responseData.data[0].url
+    ) {
+      window.location.href = responseData.data[0].url
+    }
   } catch (error) {
     console.error('Ошибка при отправке формы:', error)
-    arrayError.value = [
+    objectError.value = [
       {
-        message: 'Ошибка при отправке формы: ' + error.message,
+        message: error.message,
         code: 0,
         customData: null
       }
@@ -144,7 +164,6 @@ const onSubmit = handleSubmit(async (values) => {
 <style scoped>
 .form-container-app {
   margin: 0 auto;
-  max-width: 904px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -194,8 +213,12 @@ const onSubmit = handleSubmit(async (values) => {
   background-color: #000;
 }
 .form-container__error-message {
-  margin-bottom: 32px;
+  box-sizing: border-box;
+  width: 100%; /* Блок занимает всю ширину экрана */
+  padding: 0 13px; /* Внутренние отступы по 13px слева и справа */
+  margin: 0 auto 32px; /* Центрирование блока и отступ снизу 32px */
 }
+
 .form-wrapper__login-link {
   font: normal normal normal 16px/19px;
   text-align: center;

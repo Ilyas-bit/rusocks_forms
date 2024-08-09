@@ -53,6 +53,7 @@ const validateCheckbox = () => {
 .license-agreement-auth__container {
   text-align: start;
   margin-top: 3px;
+  font-size: 14px;
   margin-bottom: 16px;
   display: flex;
   align-items: start;

@@ -1,17 +1,20 @@
 <template>
-  <div v-if="arrayError.length" class="custom-error-massage">
-    <img src="../icons/IconAlert.svg" alt="" />
+  <div v-if="objectError && objectError.length" class="custom-error-message">
+    <img src="../icons/IconAlert.svg" alt="Alert Icon" />
     <div>
-      <div class="custom-error-massage__item" v-for="(error, index) in arrayError" :key="index">
-        {{ error.message }}
-      </div>
+      <div
+        v-for="(error, index) in objectError"
+        :key="index"
+        class="custom-error-message__item"
+        v-html="error.message"
+      ></div>
     </div>
   </div>
 </template>
 
 <script setup>
 const props = defineProps({
-  arrayError: {
+  objectError: {
     type: Array,
     required: true
   }
@@ -19,9 +22,10 @@ const props = defineProps({
 </script>
 
 <style scoped>
-.custom-error-massage {
+.custom-error-message {
   box-sizing: border-box;
-  width: 100%;
+  margin: 0 auto;
+  max-width: 880px;
   color: #fff;
   background-color: #ff0d0d;
   text-align: center;
@@ -30,11 +34,12 @@ const props = defineProps({
   justify-content: start;
   align-items: center;
 }
-.custom-error-massage img {
+.custom-error-message img {
   margin-right: 16px;
 }
 
-.custom-error-massage__item:not(:last-child) {
-  margin-bottom: 10px;
+.custom-error-message__item {
+  line-height: 18px;
+  text-align: start;
 }
 </style>
