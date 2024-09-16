@@ -14,6 +14,7 @@
       :class="{ 'input-error': showError }"
       @focus="focused = true"
       @blur="focused = false"
+      @paste="onPaste"
       ref="input"
     />
     <label :for="placeholder_value">{{ placeholder_value }}</label>
@@ -35,8 +36,27 @@ const { value, errorMessage } = useField(props.name)
 const focused = ref(false)
 const showError = computed(() => errorMessage.value && !focused.value)
 
-// Проверяем, если тип поля 'tel' (телефон)
 const isTel = computed(() => props.type === 'tel')
+
+const onPaste = (event) => {
+  if (!isTel.value) {
+    return
+  }
+
+  const clipboardData = event.clipboardData || window.clipboardData
+  let pastedData = clipboardData.getData('Text')
+
+  if (pastedData.startsWith('+7')) {
+    pastedData = pastedData.slice(2)
+  } else if (pastedData.startsWith('8')) {
+    pastedData = pastedData.slice(1)
+  }
+
+  const cleanedData = pastedData.replace(/\D/g, '')
+
+  value.value = cleanedData
+  event.preventDefault()
+}
 
 onMounted(() => {
   if (isTel.value) {
@@ -50,7 +70,6 @@ onMounted(() => {
   }
 })
 
-// Следим за изменениями в поле
 watch(value, (newValue) => {
   if (newValue) {
     focused.value = true
