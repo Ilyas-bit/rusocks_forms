@@ -119,10 +119,7 @@ const onSubmit = handleSubmit(async (values) => {
   Object.entries(formData).forEach(([key, value]) => {
     form.append(key, value)
   })
-  console.log('FormData contents:')
-  for (let pair of form.entries()) {
-    console.log(`${pair[0]}: ${pair[1]}`)
-  }
+
   try {
     const response = await fetch(formSettings.submitUrl, {
       method: 'POST',
