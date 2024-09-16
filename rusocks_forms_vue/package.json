@@ -14,9 +14,11 @@
   },
   "dependencies": {
     "@vee-validate/yup": "^4.13.1",
+    "inputmask": "^5.0.9",
     "pinia": "^2.1.7",
     "vee-validate": "^4.13.1",
     "vue": "^3.4.29",
+    "vue-inputmask": "^0.2.1",
     "vue-router": "^4.3.3",
     "yup": "^1.4.0"
   },

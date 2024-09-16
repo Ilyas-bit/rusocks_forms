@@ -10,18 +10,20 @@
       :id="placeholder_value"
       v-model="value"
       :type="type || 'text'"
+      :inputmode="isTel ? 'tel' : undefined"
       :class="{ 'input-error': showError }"
       @focus="focused = true"
       @blur="focused = false"
+      ref="input"
     />
     <label :for="placeholder_value">{{ placeholder_value }}</label>
   </div>
-  <!-- <span v-if="errorMessage && !focused" class="error-message">{{ errorMessage }}</span> -->
 </template>
 
 <script setup>
 import { useField } from 'vee-validate'
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import Inputmask from 'inputmask'
 
 const props = defineProps({
   name: String,
@@ -31,10 +33,24 @@ const props = defineProps({
 
 const { value, errorMessage } = useField(props.name)
 const focused = ref(false)
-
 const showError = computed(() => errorMessage.value && !focused.value)
 
-// Слежение за изменениями в поле ввода, чтобы обновлять состояние при вводе текста
+// Проверяем, если тип поля 'tel' (телефон)
+const isTel = computed(() => props.type === 'tel')
+
+onMounted(() => {
+  if (isTel.value) {
+    const inputElement = document.querySelector(`#${props.placeholder_value}`)
+    Inputmask({
+      mask: '+7 (999) 999-99-99',
+      showMaskOnHover: false,
+      showMaskOnFocus: false,
+      placeholder: '_'
+    }).mask(inputElement)
+  }
+})
+
+// Следим за изменениями в поле
 watch(value, (newValue) => {
   if (newValue) {
     focused.value = true
@@ -43,7 +59,6 @@ watch(value, (newValue) => {
   }
 })
 
-// Проверка значения при монтировании компонента
 onMounted(() => {
   if (value.value) {
     focused.value = true

@@ -110,9 +110,9 @@ const onSubmit = handleSubmit(async (values) => {
 
   if (formData.fullName) {
     const parts = formData.fullName.split(' ')
-    formData.surname = parts[0] || ''
-    formData.name = parts[1] || ''
-    formData.patronymic = parts[2] || ''
+    formData['REGISTER[LAST_NAME]'] = parts[0] || ''
+    formData['REGISTER[NAME]'] = parts[1] || ''
+    formData['REGISTER[SECOND_NAME]'] = parts[2] || ''
   }
 
   const form = new FormData()
